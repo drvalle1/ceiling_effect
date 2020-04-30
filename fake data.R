@@ -1,10 +1,10 @@
 rm(list=ls())
-set.seed(91)
+set.seed(99)
 
 nobs=100
-ceil1=2
-floor1=-4
-mu.true=mu=0
+ceil1=1#7
+floor1=-3#1
+mu.true=mu=0#5
 tau2.true=tau2=3
 sig2.true=sig2=0.1
 

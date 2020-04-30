@@ -1,16 +1,14 @@
-par(mfrow=c(2,2))
+store.betas=mod$betas
+store.others=cbind(mod$sig2,mod$mu,mod$tau2)
+
+round(cor(store.betas),2)
+
+par(mfrow=c(3,2))
+param.true=c(betas.true,gammas.true)
 for (i in 1:ncol(store.betas)){
   plot(store.betas[,i],type='l')
-  abline(h=betas.true[i],col='red')
+  abline(h=param.true[i],col='red')
 }
-
-par(mfrow=c(2,2))
-for (i in 1:ncol(store.gammas)){
-  plot(store.gammas[,i],type='l')
-  abline(h=gammas.true[i],col='red')
-}
-
-cor(cbind(store.betas,store.gammas))
 
 par(mfrow=c(2,2))
 others.true=c(sig2.true,mu.true,tau2.true)
