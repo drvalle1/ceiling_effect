@@ -1,3 +1,19 @@
+tnorm <- function(n,lo,hi,mu,sig){   #generates truncated normal variates based on cumulative normal distribution
+  #normal truncated lo and hi
+  
+  if(length(lo) == 1 & length(mu) > 1)lo <- rep(lo,length(mu))
+  if(length(hi) == 1 & length(mu) > 1)hi <- rep(hi,length(mu))
+  
+  q1 <- pnorm(lo,mu,sig) #cumulative distribution
+  q2 <- pnorm(hi,mu,sig) #cumulative distribution
+  
+  z <- runif(n,q1,q2)
+  z <- qnorm(z,mu,sig)
+  z[z == -Inf]  <- lo[z == -Inf]
+  z[z == Inf]   <- hi[z == Inf]
+  z
+}
+#-----------------------------------
 sample.betas.gammas=function(xmat,pr.estim,sig2,po.estim,invT){
   xmat1=cbind(xmat,xmat*pr.estim)
   xtx=t(xmat1)%*%xmat1
@@ -12,7 +28,8 @@ sample.sig2=function(xmat,pr.estim,a.prec,b.prec,po.estim,
   a1=(nobs/2)+a.prec
   xmat1=cbind(xmat,xmat*pr.estim)
   media=xmat1%*%betas.gammas
-  ssq=t(media)%*%media 
+  err=po.estim-media
+  ssq=t(err)%*%err
   b1=(ssq/2)+b.prec
   1/rgamma(1,a1,b1)
 }
@@ -44,9 +61,9 @@ sample.pr.estim=function(xmat,sig2,gammas,tau2,po.estim,betas,mu,
   #input pr.estim
   pr.estim=pr
   cond=pr==ceil1; 
-  pr.estim[cond]=tnorm(sum(cond),lo=ceil1,hi=Inf,mu=media[cond],sig=sqrt(var1))
-  cond=pr==floor; 
-  pr.estim[cond]=tnorm(sum(cond),lo=-Inf,hi=floor,mu=media[cond],sig=sqrt(var1))
+  pr.estim[cond]=tnorm(sum(cond),lo=ceil1,hi=Inf  ,mu=media[cond],sig=sqrt(var1[cond]))
+  cond=pr==floor1; 
+  pr.estim[cond]=tnorm(sum(cond),lo=-Inf,hi=floor1,mu=media[cond],sig=sqrt(var1[cond]))
   pr.estim
 }
 #------------------------
@@ -57,7 +74,7 @@ sample.po.estim=function(xmat,betas.gammas,sig2,po,ceil1,floor1,
   
   #input po.estim
   po.estim=po
-  cond=po==ceil1;  po.estim[cond]=tnorm(sum(cond),lo=ceil1,hi=Inf,  mu=media[cond],sd=sqrt(sig2))
-  cond=po==floor1; po.estim[cond]=tnorm(sum(cond),lo=-Inf,hi=floor1,mu=media[cond],sd=sqrt(sig2))  
+  cond=po==ceil1;  po.estim[cond]=tnorm(sum(cond),lo=ceil1,hi=Inf,  mu=media[cond],sig=sqrt(sig2))
+  cond=po==floor1; po.estim[cond]=tnorm(sum(cond),lo=-Inf,hi=floor1,mu=media[cond],sig=sqrt(sig2))  
   po.estim
 }

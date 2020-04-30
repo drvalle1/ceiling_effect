@@ -8,10 +8,12 @@ source('gibbs_ceiling_functions.R')
 dat=read.csv('fake data.csv',as.is=T)
 xmat=data.matrix(cbind(1,dat[,c('trat1','trat2')]))
 colnames(xmat)[1]='interc'
+pr=dat$pr
+po=dat$po
 
 #basic settings
-ceil1=7
-floor1=1
+ceil1=2
+floor1=-4
 nobs=nrow(dat)
 
 #initial values
@@ -45,12 +47,15 @@ for (i in 1:ngibbs){
   mu=sample.mu(nobs=nobs,tau2=tau2,pr.estim=pr.estim)
   tau2=sample.tau2(nobs=nobs,a.prec=a.prec,b.prec=b.prec,pr.estim=pr.estim,
                    mu=mu)
-  #parei aqui
+  
   pr.estim=sample.pr.estim(xmat=xmat,sig2=sig2,gammas=gammas,tau2=tau2,
                            po.estim=po.estim,betas=betas,mu=mu,
                            pr=pr,ceil1=ceil1,floor1=floor1)
+  # pr.estim=pr.true
+  
   po.estim=sample.po.estim(xmat=xmat,betas.gammas=betas.gammas,sig2=sig2,
                            po=po,ceil1=ceil1,floor1=floor1,pr.estim=pr.estim)
+  # po.estim=po.true
   
   #store results
   store.betas[i,]=betas

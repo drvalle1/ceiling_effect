@@ -1,12 +1,12 @@
 rm(list=ls())
-set.seed(1)
+set.seed(91)
 
 nobs=100
-ceil1=7
-floor1=1
-mu=5
-tau2=2
-sig2=0.2
+ceil1=2
+floor1=-4
+mu.true=mu=0
+tau2.true=tau2=3
+sig2.true=sig2=0.1
 
 #generate pre-scores
 pr=pr.true=rnorm(nobs,mean=mu,sd=sqrt(tau2))
@@ -20,16 +20,16 @@ xmat=cbind(1,uniq[ind,])
 colnames(xmat)=c('interc','trat1','trat2')
 
 #generate xmat associated with pr
-xmat.pr=cbind(pr,pr*xmat[,'trat1'],pr*xmat[,'trat2'])
-xmat.pr.true=cbind(pr.true,pr.true*xmat[,'trat1'],pr.true*xmat[,'trat2'])
+xmat.pr=xmat*pr
+xmat.pr.true=xmat*pr.true
 colnames(xmat.pr)=colnames(xmat.pr.true)=c('pr','pr_trat1','pr_trat2')
 
 #parameters
-betas=c(0,-0.1,0)
-gammas=c(1,0,0.1)
+betas.true=betas=c(0,-0.5,0)
+gammas.true=gammas=c(1,0,0.3)
 
 #generate data 
-media=xmat.pr%*%betas+xmat.pr.true%*%gammas
+media=xmat%*%betas+xmat.pr.true%*%gammas
 po=po.true=rnorm(nobs,mean=media,sd=sqrt(sig2))
 cond=po>ceil1;  sum(cond); po[cond]=ceil1
 cond=po<floor1; sum(cond); po[cond]=floor1
