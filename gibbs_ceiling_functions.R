@@ -14,8 +14,8 @@ tnorm <- function(n,lo,hi,mu,sig){   #generates truncated normal variates based 
   z
 }
 #-----------------------------------
-sample.betas.gammas=function(xmat,pr.estim,sig2,po.estim,invT){
-  xmat1=cbind(xmat,xmat*pr.estim)
+sample.betas.gammas=function(xmat.main,xmat.interact,pr.estim,sig2,po.estim,invT){
+  xmat1=cbind(xmat.main,xmat.interact*pr.estim)
   xtx=t(xmat1)%*%xmat1
   prec=(1/sig2)*xtx+invT
   var1=solve(prec)
@@ -23,10 +23,10 @@ sample.betas.gammas=function(xmat,pr.estim,sig2,po.estim,invT){
   t(rmvnorm(1,var1%*%pmedia,var1))
 }
 #--------------------------------
-sample.sig2=function(xmat,pr.estim,a.prec,b.prec,po.estim,
+sample.sig2=function(xmat.main,xmat.interact,pr.estim,a.prec,b.prec,po.estim,
                      betas.gammas,nobs){
   a1=(nobs/2)+a.prec
-  xmat1=cbind(xmat,xmat*pr.estim)
+  xmat1=cbind(xmat.main,xmat.interact*pr.estim)
   media=xmat1%*%betas.gammas
   err=po.estim-media
   ssq=t(err)%*%err
@@ -48,13 +48,13 @@ sample.tau2=function(nobs,a.prec,b.prec,pr.estim,mu){
   1/rgamma(1,a1,b1)
 }
 #--------------------------------
-sample.pr.estim=function(xmat,sig2,gammas,tau2,po.estim,betas,mu,
+sample.pr.estim=function(xmat.main,xmat.interact,sig2,gammas,tau2,po.estim,betas,mu,
                          pr,ceil1,floor1){
-  xgamma2=(xmat%*%gammas)^2
+  xgamma2=(xmat.interact%*%gammas)^2
   prec=(1/sig2)*xgamma2+(1/tau2)
   var1=1/prec
   p2=(1/tau2)*mu
-  p1=(1/sig2)*(po.estim-xmat%*%betas)*(xmat%*%gammas)
+  p1=(1/sig2)*(po.estim-xmat.main%*%betas)*(xmat.interact%*%gammas)
   pmedia=p1+p2
   media=pmedia*var1
   
@@ -67,9 +67,9 @@ sample.pr.estim=function(xmat,sig2,gammas,tau2,po.estim,betas,mu,
   pr.estim
 }
 #------------------------
-sample.po.estim=function(xmat,betas.gammas,sig2,po,ceil1,floor1,
+sample.po.estim=function(xmat.main,xmat.interact,betas.gammas,sig2,po,ceil1,floor1,
                          pr.estim){
-  xmat1=cbind(xmat,xmat*pr.estim)
+  xmat1=cbind(xmat.main,xmat.interact*pr.estim)
   media=xmat1%*%betas.gammas
   
   #input po.estim

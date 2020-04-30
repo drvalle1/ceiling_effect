@@ -14,28 +14,30 @@ cond=pr>ceil1;  sum(cond); pr[cond]=ceil1
 cond=pr<floor1; sum(cond); pr[cond]=floor1
 
 #generate xmat
-uniq=matrix(c(0,0,1,0,0,1),3,2,byrow=T)
+uniq=expand.grid(trat1=0:1,trat2=0:1,semester=0:1)
+cond=uniq$trat1==1 & uniq$trat2==1
+uniq=uniq[!cond,]
 ind=sample(1:nrow(uniq),size=nobs,replace=T)
-xmat=cbind(1,uniq[ind,])
-colnames(xmat)=c('interc','trat1','trat2')
+xmat.main=data.matrix(cbind(1,uniq[ind,]))
+colnames(xmat.main)[1]='interc'
 
 #generate xmat associated with pr
-xmat.pr=xmat*pr
-xmat.pr.true=xmat*pr.true
-colnames(xmat.pr)=colnames(xmat.pr.true)=c('pr','pr_trat1','pr_trat2')
+xmat.interact=cbind(1,xmat.main[,c('trat1','trat2')])
+xmat.pr=xmat.interact*pr
+xmat.pr.true=xmat.interact*pr.true
 
 #parameters
-betas.true=betas=c(0,0,-0.5)
+betas.true=betas=c(0,0,-0.5,0.1)
 gammas.true=gammas=c(1,0.2,0)
 
 #generate data 
-media=xmat%*%betas+xmat.pr.true%*%gammas
+media=xmat.main%*%betas+xmat.pr.true%*%gammas
 po=po.true=rnorm(nobs,mean=media,sd=sqrt(sig2))
 cond=po>ceil1;  sum(cond); po[cond]=ceil1
 cond=po<floor1; sum(cond); po[cond]=floor1
 
 #final dataset
-fim=data.frame(po=po,pr=pr,xmat[,-1])
+fim=data.frame(po=po,pr=pr,xmat.main[,-1])
 
 #visualize these results
 cores=rep('black',nrow(fim))

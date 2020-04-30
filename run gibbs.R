@@ -7,7 +7,8 @@ setwd('U:\\GIT_models\\ceiling_effect')
 source('gibbs_ceiling_functions.R')
 source('gibbs_ceiling_master.R')
 dat=read.csv('fake data.csv',as.is=T)
-covs.interact=covs.main=c('trat1','trat2')
+covs.main=c('trat1','trat2','semester')
+covs.interact=c('trat1','trat2')
 
 #basic settings
 ceil1=6
@@ -17,5 +18,6 @@ floor1=0
 var.betas=rep(10,6)
 ngibbs=10000
 
-mod=tobit.pre.post(dat=dat,ceil1=ceil1,floor1=floor1,covs.main=covs.main,
+mod=tobit.pre.post(dat=dat,ceil1=ceil1,floor1=floor1,
+                   covs.main=covs.main,covs.interact=covs.interact,
                    var.betas=var.betas,ngibbs=ngibbs)

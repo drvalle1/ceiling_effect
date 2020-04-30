@@ -3,7 +3,7 @@ store.others=cbind(mod$sig2,mod$mu,mod$tau2)
 
 round(cor(store.betas),2)
 
-par(mfrow=c(3,2))
+par(mfrow=c(3,3),mar=rep(1,4))
 param.true=c(betas.true,gammas.true)
 for (i in 1:ncol(store.betas)){
   plot(store.betas[,i],type='l')
