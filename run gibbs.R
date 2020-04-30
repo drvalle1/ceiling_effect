@@ -18,6 +18,7 @@ floor1=0
 var.betas=rep(10,6)
 ngibbs=10000
 
+#it is advisable to center both pr and po prior to running the analysis
 mod=tobit.pre.post(dat=dat,ceil1=ceil1,floor1=floor1,
                    covs.main=covs.main,covs.interact=covs.interact,
                    var.betas=var.betas,ngibbs=ngibbs)

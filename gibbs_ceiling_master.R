@@ -57,9 +57,12 @@ tobit.pre.post=function(dat,ceil1,floor1,covs.main,covs.interact,var.betas,ngibb
     store.gammas[i,]=gammas
     store.others[i,]=c(sig2,mu,tau2)
   }
+  colnames(store.betas)=c('intercept',covs.main)
+  colnames(store.gammas)=c('pr',paste0('pr.',covs.interact))
+  betas1=cbind(store.betas,store.gammas)
   
   #correct parameters to remove centering effect
-  list(betas=cbind(store.betas,store.gammas),
+  list(betas=betas1,
        sig2=store.others[,1],
        mu=store.others[,2],
        tau2=store.others[,3])
