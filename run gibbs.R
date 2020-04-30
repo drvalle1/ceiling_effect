@@ -10,8 +10,8 @@ dat=read.csv('fake data.csv',as.is=T)
 covs.interact=covs.main=c('trat1','trat2')
 
 #basic settings
-ceil1=1
-floor1=-3
+ceil1=6
+floor1=0
 
 #priors
 var.betas=rep(10,6)

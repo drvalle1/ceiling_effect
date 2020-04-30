@@ -1,12 +1,12 @@
 rm(list=ls())
-set.seed(99)
+set.seed(101)
 
 nobs=100
-ceil1=1#7
-floor1=-3#1
-mu.true=mu=0#5
+ceil1=6
+floor1=0
+mu.true=mu=5
 tau2.true=tau2=3
-sig2.true=sig2=0.1
+sig2.true=sig2=0.3
 
 #generate pre-scores
 pr=pr.true=rnorm(nobs,mean=mu,sd=sqrt(tau2))
@@ -25,8 +25,8 @@ xmat.pr.true=xmat*pr.true
 colnames(xmat.pr)=colnames(xmat.pr.true)=c('pr','pr_trat1','pr_trat2')
 
 #parameters
-betas.true=betas=c(0,-0.5,0)
-gammas.true=gammas=c(1,0,0.3)
+betas.true=betas=c(0,0,-0.5)
+gammas.true=gammas=c(1,0.2,0)
 
 #generate data 
 media=xmat%*%betas+xmat.pr.true%*%gammas

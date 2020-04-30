@@ -1,14 +1,12 @@
 tobit.pre.post=function(dat,ceil1,floor1,covs.main,var.betas,ngibbs){
   xmat=data.matrix(cbind(1,dat[,covs.main]))
 
-  #center pre to avoid correlation with intercept
-  media=mean(dat$pr)
-  pr=dat$pr-media
-  po=dat$po-media
+  pr=dat$pr
+  po=dat$po
   
   #basic settings
-  ceil1=ceil1-media
-  floor1=floor1-media
+  ceil1=ceil1
+  floor1=floor1
   nobs=nrow(dat)
   
   #initial values
@@ -58,6 +56,8 @@ tobit.pre.post=function(dat,ceil1,floor1,covs.main,var.betas,ngibbs){
     store.gammas[i,]=gammas
     store.others[i,]=c(sig2,mu,tau2)
   }
+  
+  #correct parameters to remove centering effect
   list(betas=cbind(store.betas,store.gammas),
        sig2=store.others[,1],
        mu=store.others[,2],
